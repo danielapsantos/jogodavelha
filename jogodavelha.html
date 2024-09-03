@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogo da Velha</title>
+    <script>
+    var tabuleiro = ["", "", "", "", "", "", "", "", ""]; // tabuleiro
+    var jogador1 = "X"; // armazena jogador atual (X ou O)
+    var jogoOn = true; // indica que o jogo está ativo
+
+    // mostra tabuleiro na página
+    function mostrarTabu(){
+        document.write("<pre>");
+        document.write(tabuleiro[0] + " | " + tabuleiro[1] + " | " + tabuleiro[2] + "<br>");
+        document.write("---------<br>");
+        document.write(tabuleiro[3] + " | " + tabuleiro[4] + " | " + tabuleiro[5] + "<br>");
+        document.write("---------<br>");
+        document.write(tabuleiro[6] + " | " + tabuleiro[7] + " | " + tabuleiro[8] + "<br>");
+        document.write("</pre><br>");
+    }
+
+    // realiza jogada
+    function jogada(){
+        if(!jogoOn){ // verifica se está ativo
+            document.write("Recarregue a página para jogar novamente! <br>");
+            return;
+        }
+
+        var posicao = +prompt("Jogador " + jogador1 + ", escolha uma posição de 0 a 8: ");
+
+        // verifica se posição é válida
+        if(posicao >= 0 && posicao <= 8 && tabuleiro[posicao] === ""){
+            tabuleiro[posicao] = jogador1; // coloca o símbolo na posição escolhida
+
+            verificarVencedor(); // verifica se tem vencedor na rodada
+
+            if(jogador1 === "X"){ // altera entre X e O a cada jogada
+                jogador1 = "O";
+            } else {
+                jogador1 = "X";
+            }
+            mostrarTabu(); // mostra tabuleiro atualizado
+
+            if(jogoOn){ // pede próxima jogada
+                jogada();
+            }
+        } else {
+            document.write("Posição já ocupada ou inválida! Tente novamente. <br>");
+            jogada(); // tenta novamente
+        }
+    }
+
+    function verificarVencedor(){ // verifica a vitória
+        var vitoria = [ // condições de vitória
+            [0, 1, 2],
+            [3, 4, 5],
+            [6, 7, 8],
+            [0, 3, 6],
+            [1, 4, 7],
+            [2, 5, 8],
+            [0, 4, 8],
+            [2, 4, 6]
+        ];
+
+        for (var i = 0; i < vitoria.length; i++){ // verifica condição de vitória
+            var a = vitoria[i][0];
+            var b = vitoria[i][1];
+            var c = vitoria[i][2];
+            if(tabuleiro[a] !== "" && tabuleiro[a] === tabuleiro[b] && tabuleiro[a] === tabuleiro[c]){
+                document.write("Jogador " + tabuleiro[a] + " venceu! <br>");
+                jogoOn = false;
+                return;
+            }
+        }
+
+        var empate = true; // verifica se todas as posições foram preenchidas (empate)
+        for (var j = 0; j < 9; j++) {
+            if (tabuleiro[j] === ""){
+                empate = false;
+                break;
+            }
+        }
+        if (empate){
+            document.write("Empate! <br>");
+            jogoOn = false;
+        }
+    }
+
+    function reiniciar(){ // reinicia o jogo
+        for (var i = 0; i < 9; i++){ // limpa o tabuleiro
+            tabuleiro[i] = "";
+        }
+        jogador1 = "X"; // define jogador inicial como X
+        jogoOn = true; // retorna o jogo
+        document.write("Novo jogo iniciado! <br>"); // informa o início de um novo jogo
+        mostrarTabu(); // exibe o tabuleiro vazio
+        jogada(); // inicia a primeira jogada
+    }
+
+    reiniciar(); // reinicia o jogo
+
+    </script>
+</head>
+<body>
+
+</body>
+</html>
